@@ -358,7 +358,7 @@ if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
 
-    document.getElementById('btn-search')?.addEventListener('click', async () => {
+document.getElementById('btn-search')?.addEventListener('click', async () => {
   const query = document.getElementById('map-search').value;
   const resultsContainer = document.getElementById('search-results');
   
@@ -367,44 +367,40 @@ if ("serviceWorker" in navigator) {
   resultsContainer.innerHTML = '<p style="padding: 10px;">Mencari...</p>';
 
   try {
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=my&limit=5&addressdetails=1`, {
-    headers: {
-        'User-Agent': 'Kandartologi-App-POC'
-    }
-});
+    // Switch to Photon API
+    const response = await fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query)}&limit=5&lat=5.41&lon=100.33`);
     const data = await response.json();
 
-    resultsContainer.innerHTML = ''; // Clear results
+    resultsContainer.innerHTML = ''; 
 
-    if (data.length === 0) {
+    if (!data.features || data.features.length === 0) {
       resultsContainer.innerHTML = '<p style="padding: 10px;">Lokasi tidak dijumpai.</p>';
       return;
     }
 
-    data.forEach(item => {
-      const div = document.createElement('div');
+    data.features.forEach(feature => {
+      const item = feature.properties;
+      const [lon, lat] = feature.geometry.coordinates; // Photon uses [lng, lat]
       
-      // We keep these for basic layout
+      const div = document.createElement('div');
       div.style.padding = '12px';
       div.style.borderBottom = '1px solid #383838';
       div.style.cursor = 'pointer';
-      div.style.fontSize = '14px'; // Makes it easier to read on mobile
-      
-      div.textContent = item.display_name;
+      div.style.fontSize = '14px';
+
+      // Construct a nice address string
+      const name = item.name || "";
+      const street = item.street || "";
+      const city = item.city || "";
+      const fullAddress = [name, street, city].filter(Boolean).join(", ");
+
+      div.textContent = fullAddress;
       
       div.onclick = () => {
-        // Update the hidden inputs
-        document.getElementById('input-lat').value = item.lat;
-        document.getElementById('input-lng').value = item.lon;
-        
-        // Update the search bar text
-        document.getElementById('map-search').value = item.display_name;
-        
-        // Clear results list
+        document.getElementById('input-lat').value = lat;
+        document.getElementById('input-lng').value = lon;
+        document.getElementById('map-search').value = name || street || query;
         resultsContainer.innerHTML = '';
-        
-        // Visual confirmation
-        div.style.background = "#444";
       };
       resultsContainer.appendChild(div);
     });
