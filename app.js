@@ -41,9 +41,10 @@ function escapeHtml(s) {
   return d.innerHTML;
 }
 
-function stars(n) {
+function stars(n, symbol = "★") {
   const r = Math.min(5, Math.max(1, Number(n) || 1));
-  return "★".repeat(r) + "☆".repeat(5 - r);
+  const emptySymbol = symbol === "★" ? "☆" : ""; // No empty stars for emoji
+  return symbol.repeat(r) + emptySymbol.repeat(symbol === "★" ? 5 - r : 0);
 }
 
 function ensureLeafletIcons() {
@@ -130,6 +131,13 @@ function renderCatalog() {
     card.dataset.id = e.id;
     node.querySelector(".review-title").textContent = e.stallName || "Tanpa nama";
     node.querySelector(".review-stars").textContent = stars(e.rating);
+    
+    // NEW: Display Joki Rating
+    const jokiEl = node.querySelector(".review-joki");
+    if (jokiEl) {
+      jokiEl.textContent = e.jokiRating ? `Joki: ${stars(e.jokiRating, "⭐")}` : "";
+    }
+
     node.querySelector(".review-area").textContent = `📍 ${e.area || "—"}`;
     node.querySelector(".review-dishes").textContent = e.dishes ? `Hidangan: ${e.dishes}` : "";
     node.querySelector(".review-notes").textContent = e.notes ? e.notes : "";
@@ -205,12 +213,9 @@ document.getElementById("form-entry")?.addEventListener("submit", (ev) => {
   const dishes = String(fd.get("dishes") || "").trim();
   const notes = String(fd.get("notes") || "").trim();
   const rating = Number(fd.get("rating")) || 3;
+  const jokiRating = Number(fd.get("jokiRating")) || 0; // NEW: Grab Joki rating
   const visited = String(fd.get("visited") || "");
-  let lat = fd.get("lat");
-  let lng = fd.get("lng");
-  lat = lat === "" || lat == null ? null : Number(lat);
-  lng = lng === "" || lng == null ? null : Number(lng);
-  if (!stallName || !area || !visited) return;
+  // ... (keep the lat/lng logic)
 
   state.entries.push({
     id: uid(),
@@ -219,6 +224,7 @@ document.getElementById("form-entry")?.addEventListener("submit", (ev) => {
     dishes,
     notes,
     rating,
+    jokiRating, // NEW: Add to the object
     visited,
     lat: lat != null && !Number.isNaN(lat) ? lat : null,
     lng: lng != null && !Number.isNaN(lng) ? lng : null,
