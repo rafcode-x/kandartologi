@@ -367,7 +367,11 @@ if ("serviceWorker" in navigator) {
   resultsContainer.innerHTML = '<p style="padding: 10px;">Mencari...</p>';
 
   try {
-    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=my`);
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=my&limit=5&addressdetails=1`, {
+    headers: {
+        'User-Agent': 'Kandartologi-App-POC'
+    }
+});
     const data = await response.json();
 
     resultsContainer.innerHTML = ''; // Clear results
