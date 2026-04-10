@@ -17,7 +17,7 @@
 <body>
   <header class="header">
     <h1>kandartologi</h1>
-    <p class="tagline">POC: catat gerai Nasi Kandar yang anda cuba — data dalam telefon sahaja (macam mechaok)</p>
+    <p class="tagline">POC: catat gerai Nasi Kandar yang anda cuba — data dalam telefon sahaja</p>
   </header>
 
   <nav class="nav-tabs" role="tablist" aria-label="Main">
@@ -46,7 +46,7 @@
               <select name="rating" required>
                 <option value="5">5 — Power</option>
                 <option value="4">4</option>
-                <option value="3">3</option>
+                <option value="3" selected>3</option>
                 <option value="2">2</option>
                 <option value="1">1</option>
               </select>
@@ -55,7 +55,7 @@
               <select name="jokiRating">
                 <option value="5">⭐⭐⭐⭐⭐ (Sifu)</option>
                 <option value="4">⭐⭐⭐⭐</option>
-                <option value="3">⭐⭐⭐</option>
+                <option value="3" selected>⭐⭐⭐</option>
                 <option value="2">⭐⭐</option>
                 <option value="1">⭐ (Amatur)</option>
               </select>
@@ -74,12 +74,14 @@
             </div>
           </label>
 
-          <label>Tarikh lawatan
+          <label class="span-2">Tarikh lawatan
             <input type="date" name="visited" required />
           </label>
+
           <label class="span-2">Nota
             <textarea name="notes" rows="2" maxlength="800" placeholder="Perasaan, queue, parking…"></textarea>
           </label>
+
           <div class="loc-row span-2">
             <label class="coord">Lat (pilihan)
               <input type="number" name="lat" step="any" placeholder="5.41" />
@@ -89,4 +91,82 @@
             </label>
             <button type="button" id="btn-geo" class="btn-ghost">Ambil lokasi</button>
           </div>
-          <div class="form-actions span
+
+          <div class="form-actions span-2">
+            <button type="submit">Simpan ke katalog</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Tapis</h2>
+        <div class="filter-row">
+          <label class="inline">Kawasan
+            <select id="filter-area"><option value="">Semua</option></select>
+          </label>
+        </div>
+      </div>
+
+      <div id="catalog-list" class="catalog-list" aria-live="polite"></div>
+      <p class="empty-hint" id="catalog-empty">Belum ada lawatan — tambah di atas.</p>
+    </section>
+
+    <section id="panel-map" class="panel" role="tabpanel" hidden>
+      <div class="card map-card">
+        <p class="map-hint">Pin muncul jika lat/lng disimpan.</p>
+        <div id="map" class="map" role="application"></div>
+      </div>
+    </section>
+
+    <section id="panel-share" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2 class="card-title">Nama anda (untuk eksport)</h2>
+        <form id="form-profile" class="form-row">
+          <input type="text" id="profile-name" maxlength="60" placeholder="Contoh: Along" />
+          <button type="submit">Simpan</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Kongsi fail</h2>
+        <div class="share-actions">
+          <button type="button" id="btn-export">Eksport katalog (JSON)</button>
+          <label class="file-label btn-ghost">
+            Import katalog / ulasan rakan
+            <input type="file" id="input-import" accept="application/json,.json" hidden />
+          </label>
+        </div>
+      </div>
+
+      <div class="card community">
+        <h2 class="card-title">Orang lain &amp; interaksi</h2>
+        <ul id="peer-feed" class="peer-feed"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>kandartologi POC — <strong>localStorage</strong> sahaja.</p>
+  </footer>
+
+  <template id="tpl-card">
+    <article class="review-card" data-id="">
+      <header class="review-head">
+        <div>
+          <h3 class="review-title"></h3>
+          <span class="review-joki" style="font-size: 0.8rem; color: #ff9800; display: block;"></span>
+        </div>
+        <span class="review-stars"></span>
+      </header>
+      <p class="review-area"></p>
+      <p class="review-dishes"></p>
+      <p class="review-notes"></p>
+      <p class="review-meta"></p>
+      <button type="button" class="btn-ghost danger btn-delete">Buang</button>
+    </article>
+  </template>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
