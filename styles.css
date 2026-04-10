@@ -1,13 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@300;500;700&display=swap');
+
 :root {
-  --bg: #1e1e1e;
-  --surface: #252526;
-  --border: #3c3c3c;
-  --text: #d4d4d4;
-  --muted: #858585;
-  --accent: #c9a227;
-  --accent2: #569cd6;
+  /* The "Paper" Palette */
+  --bg: #f4f1ea;          /* Darker surrounding "desk" color */
+  --surface: #fdfaf3;     /* The actual "paper" color */
+  --border: #1a1a1a;      /* Bold ink black */
+  --text: #1a1a1a;        /* Deep black for readability */
+  --muted: #555555;       /* Editorial footnotes */
+  --accent: #d32f2f;      /* Classic red for accents (like stars) */
+  --accent2: #2196f3;     /* Blue for location/links */
   --danger: #f14c4c;
-  --font: "Segoe UI", system-ui, sans-serif;
+  --font: 'Lora', serif;  /* The main serif font */
+  --font-alt: 'Space Grotesk', sans-serif; /* For technical details */
 }
 
 *,
@@ -391,6 +395,19 @@ button:hover {
 
 #search-results p {
   color: #888;
+
+  input, select, textarea {
+  background: #ffffff;
+  color: var(--text);
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-family: var(--font-alt); /* Clean sans-serif for typing */
+}
+
+input:focus {
+  border-color: var(--border);
+  outline: none;
+}
   font-style: italic;
 }
 
