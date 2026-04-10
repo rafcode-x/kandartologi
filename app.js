@@ -357,6 +357,53 @@ banjirSlider?.addEventListener('input', (e) => {
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
+
+    document.getElementById('btn-search')?.addEventListener('click', async () => {
+  const query = document.getElementById('map-search').value;
+  const resultsContainer = document.getElementById('search-results');
+  
+  if (!query) return;
+  
+  resultsContainer.innerHTML = '<p style="padding: 10px;">Mencari...</p>';
+
+  try {
+    const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=my`);
+    const data = await response.json();
+
+    resultsContainer.innerHTML = ''; // Clear results
+
+    if (data.length === 0) {
+      resultsContainer.innerHTML = '<p style="padding: 10px;">Lokasi tidak dijumpai.</p>';
+      return;
+    }
+
+    data.forEach(item => {
+      const div = document.createElement('div');
+      div.style.padding = '8px 12px';
+      div.style.borderBottom = '1px solid #333';
+      div.style.cursor = 'pointer';
+      div.textContent = item.display_name;
+      
+      div.onclick = () => {
+        // Update the hidden inputs
+        document.getElementById('input-lat').value = item.lat;
+        document.getElementById('input-lng').value = item.lon;
+        
+        // Update the search bar text
+        document.getElementById('map-search').value = item.display_name;
+        
+        // Clear results list
+        resultsContainer.innerHTML = '';
+        
+        // Visual confirmation
+        div.style.background = "#444";
+      };
+      resultsContainer.appendChild(div);
+    });
+  } catch (error) {
+    resultsContainer.innerHTML = '<p style="padding: 10px;">Ralat sambungan.</p>';
+  }
+});
   });
 }
 
