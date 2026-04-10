@@ -367,6 +367,21 @@ button:hover {
 .donate-link:hover {
   background: rgba(86, 156, 214, 0.12);
 }
+/* Styling for the new Location Search results */
+#search-results div {
+  transition: background-color 0.2s ease;
+  color: #ccc;
+}
+
+#search-results div:hover {
+  background-color: #444 !important; /* Darker grey when hovering */
+  color: #ffffff !important;        /* Brighter text */
+}
+
+#search-results p {
+  color: #888;
+  font-style: italic;
+}
 
 .leaflet-container {
   font-family: var(--font);
