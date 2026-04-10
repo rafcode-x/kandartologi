@@ -160,9 +160,20 @@ textarea {
   align-items: flex-end;
 }
 
-.loc-row .coord {
+.loc-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.coord {
   flex: 1;
-  min-width: 7rem;
+}
+
+/* Make sure the GPS button stays aligned with the inputs */
+#btn-geo {
+  height: 38px; /* Matches the input height */
+  padding: 0 10px;
 }
 
 button {
