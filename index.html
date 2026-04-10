@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1e1e1e" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="kandartologi" />
+  <title>kandartologi — Nasi Kandar catalog</title>
+  <link rel="icon" type="image/png" href="icons/icon-192.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="vendor/leaflet.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>kandartologi</h1>
+    <p class="tagline">POC: catat gerai Nasi Kandar yang anda cuba — data dalam telefon sahaja (macam mechaok)</p>
+  </header>
+
+  <nav class="nav-tabs" role="tablist" aria-label="Main">
+    <button type="button" class="tab active" role="tab" aria-selected="true" data-panel="catalog">Katalog</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-panel="map">Peta</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-panel="share">Kongsi &amp; orang lain</button>
+  </nav>
+
+  <main class="main">
+    <section id="panel-catalog" class="panel" role="tabpanel">
+      <div class="card">
+        <h2 class="card-title">Tambah lawatan</h2>
+        <form id="form-entry" class="form-grid">
+          <label>Nama gerai / restoran
+            <input type="text" name="stallName" required maxlength="120" placeholder="Contoh: Nasi Kandar Line Clear" />
+          </label>
+          <label>Kawasan / bandar
+            <input type="text" name="area" required maxlength="80" placeholder="Contoh: George Town" />
+          </label>
+          <label class="span-2">Hidangan yang dicuba
+            <input type="text" name="dishes" maxlength="300" placeholder="Ayam goreng, kuah campur…" />
+          </label>
+          <label>Rating
+            <select name="rating" required>
+              <option value="5">5 — power</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+          </label>
+          <label>Tarikh lawatan
+            <input type="date" name="visited" required />
+          </label>
+          <label class="span-2">Nota
+            <textarea name="notes" rows="2" maxlength="800" placeholder="Perasaan, queue, parking…"></textarea>
+          </label>
+          <div class="loc-row span-2">
+            <label class="coord">Lat (pilihan)
+              <input type="number" name="lat" step="any" placeholder="5.41" />
+            </label>
+            <label class="coord">Lng (pilihan)
+              <input type="number" name="lng" step="any" placeholder="100.33" />
+            </label>
+            <button type="button" id="btn-geo" class="btn-ghost">Ambil lokasi</button>
+          </div>
+          <div class="form-actions span-2">
+            <button type="submit">Simpan ke katalog</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Tapis</h2>
+        <div class="filter-row">
+          <label class="inline">Kawasan
+            <select id="filter-area"><option value="">Semua</option></select>
+          </label>
+        </div>
+      </div>
+
+      <div id="catalog-list" class="catalog-list" aria-live="polite"></div>
+      <p class="empty-hint" id="catalog-empty">Belum ada lawatan — tambah di atas.</p>
+    </section>
+
+    <section id="panel-map" class="panel" role="tabpanel" hidden>
+      <div class="card map-card">
+        <p class="map-hint">Pin muncul jika lat/lng disimpan. Peta memerlukan internet untuk jubin OSM.</p>
+        <div id="map" class="map" role="application" aria-label="Peta lawatan"></div>
+      </div>
+    </section>
+
+    <section id="panel-share" class="panel" role="tabpanel" hidden>
+      <div class="card">
+        <h2 class="card-title">Nama anda (untuk eksport)</h2>
+        <form id="form-profile" class="form-row">
+          <input type="text" id="profile-name" maxlength="60" placeholder="Contoh: Along" />
+          <button type="submit">Simpan</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2 class="card-title">Kongsi fail</h2>
+        <p class="hint">Hantar fail JSON kepada kawan; mereka <strong>import</strong> di telefon mereka untuk gabung senarai (tiada pelayan — POC).</p>
+        <div class="share-actions">
+          <button type="button" id="btn-export">Eksport katalog (JSON)</button>
+          <label class="file-label btn-ghost">
+            Import katalog / ulasan rakan
+            <input type="file" id="input-import" accept="application/json,.json" hidden />
+          </label>
+        </div>
+      </div>
+
+      <div class="card community">
+        <h2 class="card-title">Orang lain &amp; interaksi (POC)</h2>
+        <p class="hint">Versi penuh perlu akaun &amp; pangkalan data. Di sini: <strong>import JSON</strong> rakan = “ulasan orang lain” muncul dalam katalog dengan tanda <em>Dari: …</em></p>
+        <ul id="peer-feed" class="peer-feed"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>kandartologi POC — <strong>localStorage</strong> sahaja. Pasang sebagai PWA jika mahu ikon di skrin utama.</p>
+    <p class="footer-donate">
+      <a class="donate-link" href="https://github.com/sponsors/rafieq-afed" target="_blank" rel="noopener noreferrer">Donate / support us</a>
+    </p>
+  </footer>
+
+  <template id="tpl-card">
+    <article class="review-card" data-id="">
+      <header class="review-head">
+        <h3 class="review-title"></h3>
+        <span class="review-stars" aria-label="Rating"></span>
+      </header>
+      <p class="review-area"></p>
+      <p class="review-dishes"></p>
+      <p class="review-notes"></p>
+      <p class="review-meta"></p>
+      <button type="button" class="btn-ghost danger btn-delete">Buang</button>
+    </article>
+  </template>
+
+  <script src="vendor/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
