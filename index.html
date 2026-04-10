@@ -82,15 +82,25 @@
             <textarea name="notes" rows="2" maxlength="800" placeholder="Perasaan, queue, parking…"></textarea>
           </label>
 
-          <div class="loc-row span-2">
-            <label class="coord">Lat (pilihan)
-              <input type="number" name="lat" step="any" placeholder="5.41" />
-            </label>
-            <label class="coord">Lng (pilihan)
-              <input type="number" name="lng" step="any" placeholder="100.33" />
-            </label>
-            <button type="button" id="btn-geo" class="btn-ghost">Ambil lokasi</button>
-          </div>
+          <div class="span-2" style="margin-top: 10px;">
+  <label>Cari Lokasi (Peta)
+    <div style="display: flex; gap: 0.5rem;">
+      <input type="text" id="map-search" placeholder="Cari kedai atau jalan..." style="flex-grow: 1;">
+      <button type="button" id="btn-search" class="btn-ghost">Cari</button>
+    </div>
+  </label>
+  <div id="search-results" style="font-size: 0.8rem; background: #2a2a2a; border-radius: 4px; margin-top: 5px; max-height: 150px; overflow-y: auto;"></div>
+  
+  <div class="loc-row" style="margin-top: 10px; opacity: 0.7;">
+    <label class="coord">Lat
+      <input type="number" name="lat" id="input-lat" step="any" readonly />
+    </label>
+    <label class="coord">Lng
+      <input type="number" name="lng" id="input-lng" step="any" readonly />
+    </label>
+    <button type="button" id="btn-geo" class="btn-ghost" style="font-size: 0.7rem;">GPS</button>
+  </div>
+</div>
 
           <div class="form-actions span-2">
             <button type="submit">Simpan ke katalog</button>
