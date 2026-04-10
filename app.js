@@ -43,7 +43,7 @@ function escapeHtml(s) {
 
 function stars(n, symbol = "★") {
   const r = Math.min(5, Math.max(1, Number(n) || 1));
-  const emptySymbol = symbol === "★" ? "☆" : ""; // No empty stars for emoji
+  const emptySymbol = symbol === "★" ? "☆" : ""; 
   return symbol.repeat(r) + emptySymbol.repeat(symbol === "★" ? 5 - r : 0);
 }
 
@@ -132,7 +132,6 @@ function renderCatalog() {
     node.querySelector(".review-title").textContent = e.stallName || "Tanpa nama";
     node.querySelector(".review-stars").textContent = stars(e.rating);
     
-    // NEW: Display Joki Rating
     const jokiEl = node.querySelector(".review-joki");
     if (jokiEl) {
       jokiEl.textContent = e.jokiRating ? `Joki: ${stars(e.jokiRating, "⭐")}` : "";
@@ -141,15 +140,18 @@ function renderCatalog() {
     node.querySelector(".review-area").textContent = `📍 ${e.area || "—"}`;
     node.querySelector(".review-dishes").textContent = e.dishes ? `Hidangan: ${e.dishes}` : "";
     node.querySelector(".review-notes").textContent = e.notes ? e.notes : "";
+    
     const peer = e.sharedFrom ? ` · Dari: ${e.sharedFrom}` : "";
     const coord =
       e.lat != null && e.lng != null && !Number.isNaN(Number(e.lat)) && !Number.isNaN(Number(e.lng))
         ? ` · ${Number(e.lat).toFixed(4)}, ${Number(e.lng).toFixed(4)}`
         : "";
+    
     const banjirLevels = ["", "Kering", "Sikit Seghok", "Standard", "Banjir", "Tsunami"];
     const banjirStatus = e.banjir ? banjirLevels[e.banjir] : "Standard";
 
     node.querySelector(".review-meta").textContent = `Lawatan: ${e.visited || "—"}${coord}${peer} · 🌊 ${banjirStatus}`;
+    
     node.querySelector(".btn-delete").addEventListener("click", () => {
       if (!confirm("Buang lawatan ini?")) return;
       state.entries = state.entries.filter((x) => x.id !== e.id);
@@ -158,7 +160,6 @@ function renderCatalog() {
     });
     root.appendChild(node);
   }
-
   renderPeerFeed();
 }
 
@@ -217,9 +218,15 @@ document.getElementById("form-entry")?.addEventListener("submit", (ev) => {
   const notes = String(fd.get("notes") || "").trim();
   const rating = Number(fd.get("rating")) || 3;
   const jokiRating = Number(fd.get("jokiRating")) || 0; 
-  const banjir = Number(fd.get("banjir")) || 3; // NEW: Grab Joki rating
+  const banjir = Number(fd.get("banjir")) || 3;
   const visited = String(fd.get("visited") || "");
-  // ... (keep the lat/lng logic)
+  
+  let latRaw = fd.get("lat");
+  let lngRaw = fd.get("lng");
+  let lat = (latRaw === "" || latRaw == null) ? null : Number(latRaw);
+  let lng = (lngRaw === "" || lngRaw == null) ? null : Number(lngRaw);
+
+  if (!stallName || !area || !visited) return;
 
   state.entries.push({
     id: uid(),
@@ -229,7 +236,7 @@ document.getElementById("form-entry")?.addEventListener("submit", (ev) => {
     notes,
     rating,
     jokiRating,
-    banjir, // NEW: Add to the object
+    banjir,
     visited,
     lat: lat != null && !Number.isNaN(lat) ? lat : null,
     lng: lng != null && !Number.isNaN(lng) ? lng : null,
@@ -238,7 +245,6 @@ document.getElementById("form-entry")?.addEventListener("submit", (ev) => {
   saveState();
   ev.target.reset();
   
-  // Reset the "Banjir" label text back to Standard after saving
   const bl = document.getElementById('banjir-label');
   if (bl) bl.textContent = "Standard";
 
@@ -272,7 +278,8 @@ document.getElementById("form-profile")?.addEventListener("submit", (ev) => {
   saveState();
 });
 
-document.getElementById("profile-name").value = state.profileName;
+const pNameInput = document.getElementById("profile-name");
+if (pNameInput) pNameInput.value = state.profileName;
 
 document.getElementById("btn-export")?.addEventListener("click", () => {
   const payload = {
@@ -322,6 +329,8 @@ document.getElementById("input-import")?.addEventListener("change", async (ev) =
         dishes: String(raw.dishes || "").trim(),
         notes: String(raw.notes || "").trim(),
         rating: Math.min(5, Math.max(1, Number(raw.rating) || 3)),
+        jokiRating: Number(raw.jokiRating) || 0,
+        banjir: Number(raw.banjir) || 3,
         visited: String(raw.visited || raw.date || todayYmd()),
         lat: raw.lat != null ? Number(raw.lat) : null,
         lng: raw.lng != null ? Number(raw.lng) : null,
@@ -336,13 +345,15 @@ document.getElementById("input-import")?.addEventListener("change", async (ev) =
     alert("Fail JSON tidak sah.");
   }
 });
+
 const banjirSlider = document.getElementById('banjir-slider');
 const banjirLabel = document.getElementById('banjir-label');
 const levels = ["", "Kering", "Sikit Seghok", "Standard", "Banjir", "Tsunami Mat!"];
 
 banjirSlider?.addEventListener('input', (e) => {
-  banjirLabel.textContent = levels[e.target.value];
+  if (banjirLabel) banjirLabel.textContent = levels[e.target.value];
 });
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
