@@ -379,9 +379,13 @@ if ("serviceWorker" in navigator) {
 
     data.forEach(item => {
       const div = document.createElement('div');
-      div.style.padding = '8px 12px';
-      div.style.borderBottom = '1px solid #333';
+      
+      // We keep these for basic layout
+      div.style.padding = '12px';
+      div.style.borderBottom = '1px solid #383838';
       div.style.cursor = 'pointer';
+      div.style.fontSize = '14px'; // Makes it easier to read on mobile
+      
       div.textContent = item.display_name;
       
       div.onclick = () => {
