@@ -40,7 +40,8 @@
           <label class="span-2">Hidangan yang dicuba
             <input type="text" name="dishes" maxlength="300" placeholder="Ayam goreng, kuah campur…" />
           </label>
-         <div class="form-grid span-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0;">
+          
+          <div class="form-grid span-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0;">
             <label>Rating Keseluruhan
               <select name="rating" required>
                 <option value="5">5 — Power</option>
@@ -60,6 +61,19 @@
               </select>
             </label>
           </div>
+
+          <label class="span-2" style="margin-top: 10px;">
+            Tahap Banjir: <span id="banjir-label" style="font-weight: bold; color: #d32f2f;">Standard</span>
+            <input type="range" name="banjir" id="banjir-slider" min="1" max="5" value="3" step="1" style="width: 100%; margin-top: 8px;">
+            <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #666;">
+              <span>Kering</span>
+              <span>Sikit</span>
+              <span>Standard</span>
+              <span>Banjir</span>
+              <span>Tsunami</span>
+            </div>
+          </label>
+
           <label>Tarikh lawatan
             <input type="date" name="visited" required />
           </label>
@@ -75,97 +89,4 @@
             </label>
             <button type="button" id="btn-geo" class="btn-ghost">Ambil lokasi</button>
           </div>
-          <div class="form-actions span-2">
-            <button type="submit">Simpan ke katalog</button>
-          </div>
-        </form>
-        <label class="span-2" style="margin-top: 10px;">
-  Tahap Banjir: <span id="banjir-label" style="font-weight: bold; color: #d32f2f;">Standard</span>
-  <input type="range" name="banjir" id="banjir-slider" min="1" max="5" value="3" step="1" style="width: 100%; margin-top: 8px;">
-  <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: #666;">
-    <span>Kering</span>
-    <span>Sikit</span>
-    <span>Standard</span>
-    <span>Banjir</span>
-    <span>Tsunami</span>
-  </div>
-</label>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">Tapis</h2>
-        <div class="filter-row">
-          <label class="inline">Kawasan
-            <select id="filter-area"><option value="">Semua</option></select>
-          </label>
-        </div>
-      </div>
-
-      <div id="catalog-list" class="catalog-list" aria-live="polite"></div>
-      <p class="empty-hint" id="catalog-empty">Belum ada lawatan — tambah di atas.</p>
-    </section>
-
-    <section id="panel-map" class="panel" role="tabpanel" hidden>
-      <div class="card map-card">
-        <p class="map-hint">Pin muncul jika lat/lng disimpan. Peta memerlukan internet untuk jubin OSM.</p>
-        <div id="map" class="map" role="application" aria-label="Peta lawatan"></div>
-      </div>
-    </section>
-
-    <section id="panel-share" class="panel" role="tabpanel" hidden>
-      <div class="card">
-        <h2 class="card-title">Nama anda (untuk eksport)</h2>
-        <form id="form-profile" class="form-row">
-          <input type="text" id="profile-name" maxlength="60" placeholder="Contoh: Along" />
-          <button type="submit">Simpan</button>
-        </form>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">Kongsi fail</h2>
-        <p class="hint">Hantar fail JSON kepada kawan; mereka <strong>import</strong> di telefon mereka untuk gabung senarai (tiada pelayan — POC).</p>
-        <div class="share-actions">
-          <button type="button" id="btn-export">Eksport katalog (JSON)</button>
-          <label class="file-label btn-ghost">
-            Import katalog / ulasan rakan
-            <input type="file" id="input-import" accept="application/json,.json" hidden />
-          </label>
-        </div>
-      </div>
-
-      <div class="card community">
-        <h2 class="card-title">Orang lain &amp; interaksi (POC)</h2>
-        <p class="hint">Versi penuh perlu akaun &amp; pangkalan data. Di sini: <strong>import JSON</strong> rakan = “ulasan orang lain” muncul dalam katalog dengan tanda <em>Dari: …</em></p>
-        <ul id="peer-feed" class="peer-feed"></ul>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>kandartologi POC — <strong>localStorage</strong> sahaja. Pasang sebagai PWA jika mahu ikon di skrin utama.</p>
-    <p class="footer-donate">
-      <a class="donate-link" href="https://github.com/sponsors/rafieq-afed" target="_blank" rel="noopener noreferrer">Donate / support us</a>
-    </p>
-  </footer>
-
-  <template id="tpl-card">
-    <article class="review-card" data-id="">
-      <header class="review-head">
-        <div>
-          <h3 class="review-title"></h3>
-          <span class="review-joki" style="font-size: 0.8rem; color: #ff9800; display: block;"></span>
-        </div>
-        <span class="review-stars" aria-label="Rating"></span>
-      </header>
-      <p class="review-area"></p>
-      <p class="review-dishes"></p>
-      <p class="review-notes"></p>
-      <p class="review-meta"></p>
-      <button type="button" class="btn-ghost danger btn-delete">Buang</button>
-    </article>
-  </template>
-
-  <script src="vendor/leaflet.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+          <div class="form-actions span
