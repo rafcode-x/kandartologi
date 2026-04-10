@@ -40,15 +40,26 @@
           <label class="span-2">Hidangan yang dicuba
             <input type="text" name="dishes" maxlength="300" placeholder="Ayam goreng, kuah campur…" />
           </label>
-          <label>Rating
-            <select name="rating" required>
-              <option value="5">5 — power</option>
-              <option value="4">4</option>
-              <option value="3">3</option>
-              <option value="2">2</option>
-              <option value="1">1</option>
-            </select>
-          </label>
+         <div class="form-grid span-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 0;">
+            <label>Rating Keseluruhan
+              <select name="rating" required>
+                <option value="5">5 — Power</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </label>
+            <label>Skill Joki (Mixing)
+              <select name="jokiRating">
+                <option value="5">⭐⭐⭐⭐⭐ (Sifu)</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐ (Amatur)</option>
+              </select>
+            </label>
+          </div>
           <label>Tarikh lawatan
             <input type="date" name="visited" required />
           </label>
@@ -129,7 +140,10 @@
   <template id="tpl-card">
     <article class="review-card" data-id="">
       <header class="review-head">
-        <h3 class="review-title"></h3>
+        <div>
+          <h3 class="review-title"></h3>
+          <span class="review-joki" style="font-size: 0.8rem; color: #ff9800; display: block;"></span>
+        </div>
         <span class="review-stars" aria-label="Rating"></span>
       </header>
       <p class="review-area"></p>
