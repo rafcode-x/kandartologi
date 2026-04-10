@@ -83,22 +83,28 @@
           </label>
 
           <div class="span-2" style="margin-top: 10px;">
-  <label>Cari Lokasi (Peta)
+  <label>Cari Lokasi
     <div style="display: flex; gap: 0.5rem;">
       <input type="text" id="map-search" placeholder="Cari kedai atau jalan..." style="flex-grow: 1;">
       <button type="button" id="btn-search" class="btn-ghost">Cari</button>
     </div>
   </label>
   <div id="search-results" style="font-size: 0.8rem; background: #2a2a2a; border-radius: 4px; margin-top: 5px; max-height: 150px; overflow-y: auto;"></div>
-  
-  <div class="loc-row" style="margin-top: 10px; opacity: 0.7;">
+
+  <div style="display: flex; align-items: center; margin: 15px 0; color: #666; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;">
+    <div style="flex: 1; height: 1px; background: #444;"></div>
+    <div style="padding: 0 10px;">ATAU</div>
+    <div style="flex: 1; height: 1px; background: #444;"></div>
+  </div>
+
+  <div class="loc-row">
     <label class="coord">Lat
-      <input type="number" name="lat" id="input-lat" step="any" />
+      <input type="number" name="lat" id="input-lat" step="any" placeholder="5.41..." />
     </label>
     <label class="coord">Lng
-      <input type="number" name="lng" id="input-lng" step="any" />
+      <input type="number" name="lng" id="input-lng" step="any" placeholder="100.33..." />
     </label>
-    <button type="button" id="btn-geo" class="btn-ghost" style="font-size: 0.7rem;">GPS</button>
+    <button type="button" id="btn-geo" class="btn-ghost" title="Guna GPS Telefon">📍 GPS</button>
   </div>
 </div>
 
